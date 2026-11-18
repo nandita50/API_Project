@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>javascipt_API</title>
+	<style>
+		#data{
+			display:flex;
+			gap:50px;
+			padding: 10px;
+		}
+		.card{
+			width: 500px;
+			border-radius: 30px;
+			border:2px solid darkblue;
+			box-shadow:0 10px 8px rgba(0,0,0,0,1.5) ;
+			padding: 20px;
+
+		
+
+		}
+		.card img{
+			width: 300px;
+			height: 250px;
+			border: 1px solid green;
+			border-radius: 20px;
+		}
+		.card:hover{
+			transform: scale(1.05);
+      		box-shadow: 0 8px 10px lightblue;
+      		cursor: pointer;
+		}
+		.card img:hover{
+			transform: scale(1);
+      		box-shadow: 0 8px 10px gray;
+		}
+
+
+	</style>
+</head>
+<body>
+	<h1>RECIPE CARD</h1>
+	<div id='data'></div>
+	<script>
+		(async function(){
+			try{
+				let response=await fetch("https://dummyjson.com/recipes");
+				let data=await response.json();
+				let output="";
+				data.recipes.forEach(recipe=>{
+					let star="⭐".repeat(Math.round(recipe.rating))
+					output+=`<div class="card"><img src="${recipe.image}"><h2><b>NAME:</b>${recipe.name}</h2><h2><b>ID:</b>${recipe.id}</h2><h2><b>Rating:</b>${star}</h2><h2><b>Difficulty:</b>${recipe.difficulty}</h2><h2><b>Meel Type:</b>${recipe.meeltype}</h2></div>`;
+
+				});
+		document.getElementById("data").innerHTML=output;
+			}
+			catch(error){
+				document.getElementById("data").innerHTML=("Enter fetch not metch");
+			}
+
+		})();
+	</script>
+
+</body>
+</html>
