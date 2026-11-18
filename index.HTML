@@ -1,66 +1,92 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>javascipt_API</title>
+	<title>Recipe Cards - JavaScript API</title>
 	<style>
-		#data{
-			display:flex;
-			gap:50px;
-			padding: 10px;
-		}
-		.card{
-			width: 500px;
-			border-radius: 30px;
-			border:2px solid darkblue;
-			box-shadow:0 10px 8px rgba(0,0,0,0,1.5) ;
+		body {
+			font-family: Arial, sans-serif;
+			background-color: #f4f6f9;
+			margin: 0;
 			padding: 20px;
-
-		
-
 		}
-		.card img{
-			width: 300px;
-			height: 250px;
-			border: 1px solid green;
+		h1 {
+			text-align: center;
+			color: #1a365d;
+		}
+		#data {
+			display: flex;
+			flex-wrap: wrap;
+			justify-content: center;
+			gap: 30px;
+			padding: 20px;
+		}
+		.card {
+			width: 320px;
+			background: #ffffff;
 			border-radius: 20px;
+			border: 2px solid #1e3a8a;
+			box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+			padding: 20px;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			transition: transform 0.2s ease, box-shadow 0.2s ease;
 		}
-		.card:hover{
-			transform: scale(1.05);
-      		box-shadow: 0 8px 10px lightblue;
-      		cursor: pointer;
+		.card:hover {
+			transform: translateY(-5px);
+			box-shadow: 0 8px 20px rgba(30, 58, 138, 0.25);
+			cursor: pointer;
 		}
-		.card img:hover{
-			transform: scale(1);
-      		box-shadow: 0 8px 10px gray;
+		.card img {
+			width: 100%;
+			height: 200px;
+			object-fit: cover;
+			border-radius: 15px;
+			margin-bottom: 15px;
 		}
-
-
+		.card h3 {
+			margin: 6px 0;
+			font-size: 16px;
+			color: #333;
+			width: 100%;
+		}
+		.card b {
+			color: #1e3a8a;
+		}
 	</style>
 </head>
 <body>
-	<h1>RECIPE CARD</h1>
-	<div id='data'></div>
+	<h1>RECIPE CARDS</h1>
+	<div id="data">Loading recipes...</div>
+
 	<script>
 		(async function(){
-			try{
-				let response=await fetch("https://dummyjson.com/recipes");
-				let data=await response.json();
-				let output="";
-				data.recipes.forEach(recipe=>{
-					let star="⭐".repeat(Math.round(recipe.rating))
-					output+=`<div class="card"><img src="${recipe.image}"><h2><b>NAME:</b>${recipe.name}</h2><h2><b>ID:</b>${recipe.id}</h2><h2><b>Rating:</b>${star}</h2><h2><b>Difficulty:</b>${recipe.difficulty}</h2><h2><b>Meel Type:</b>${recipe.meeltype}</h2></div>`;
-
+			try {
+				let response = await fetch("https://dummyjson.com/recipes");
+				let data = await response.json();
+				let output = "";
+				data.recipes.forEach(recipe => {
+					let star = "⭐".repeat(Math.round(recipe.rating));
+					let mealTypes = Array.isArray(recipe.mealType) ? recipe.mealType.join(", ") : recipe.mealType;
+					output += `
+						<div class="card">
+							<img src="${recipe.image}" alt="${recipe.name}">
+							<h3><b>Name:</b> ${recipe.name}</h3>
+							<h3><b>ID:</b> ${recipe.id}</h3>
+							<h3><b>Rating:</b> ${star} (${recipe.rating})</h3>
+							<h3><b>Difficulty:</b> ${recipe.difficulty}</h3>
+							<h3><b>Meal Type:</b> ${mealTypes}</h3>
+						</div>
+					`;
 				});
-		document.getElementById("data").innerHTML=output;
+				document.getElementById("data").innerHTML = output;
+			} catch(error) {
+				console.error(error);
+				document.getElementById("data").innerHTML = "<p style='color:red;'>Failed to load recipes. Please try again later.</p>";
 			}
-			catch(error){
-				document.getElementById("data").innerHTML=("Enter fetch not metch");
-			}
-
 		})();
 	</script>
-
 </body>
 </html>
